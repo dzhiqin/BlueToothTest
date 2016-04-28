@@ -43,6 +43,8 @@ public class BluetoothCommunThread extends Thread{
 		}
 	}
 	
+
+
 	public void run(){
 		while(true){
 			if(!isRun){

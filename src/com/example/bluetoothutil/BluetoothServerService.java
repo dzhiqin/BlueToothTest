@@ -1,11 +1,16 @@
 package com.example.bluetoothutil;
 
+import java.io.Serializable;
+
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 
 public class BluetoothServerService extends Service {
 
@@ -14,7 +19,7 @@ public class BluetoothServerService extends Service {
 	private BluetoothCommunThread communThread;
 	//控制信息广播接收器
 	private BroadcastReceiver controlReceiver=new BroadcastReceiver(){
-		public void onRecive(Context context,Intent intent){
+		public void onReceive(Context context,Intent intent){
 			String action =intent.getAction();
 			if(BluetoothTools.ACTION_STOP_SERVICE.equals(action)){
 				//停止后台服务
@@ -31,16 +36,72 @@ public class BluetoothServerService extends Service {
 			}
 		}
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO 自动生成的方法存根
-			
+		
+	};
+	private Handler serviceHandler =new Handler(){
+		public void handlerMessage(Message msg){
+			switch(msg.what){
+			case BluetoothTools.MESSAGE_CONNECT_SUCCESS:
+				//连接成功，开启通讯线程
+				communThread=new BluetoothCommunThread(serviceHandler,(BluetoothSocket)msg.obj);
+				communThread.start();
+				//发送连接成功信息
+				Intent connSuccIntent=new Intent(BluetoothTools.ACTION_CONNECT_SUCCESS);
+				sendBroadcast(connSuccIntent);
+				
+				break;
+			case BluetoothTools.MESSAGE_CONNECT_ERROR:
+				//连接错误，发送连接错误广播
+				Intent errIntent=new Intent(BluetoothTools.ACTION_CONNECT_ERROR);
+				sendBroadcast(errIntent);
+				break;
+			case BluetoothTools.MESSAGE_READ_OBJECT:
+				//读取到数据，发送数据广播
+				Intent dataIntent=new Intent(BluetoothTools.ACTION_DATA_TO_GAME);
+				dataIntent.putExtra(BluetoothTools.DATA,(Serializable)msg.obj);
+				sendBroadcast(dataIntent);
+				break;
+			default:
+				break;
+			}
+			super.handleMessage(msg);
 		}
 	};
 	@Override
-	public IBinder onBind(Intent intent) {
+	public IBinder onBind(Intent arg0) {
 		// TODO 自动生成的方法存根
 		return null;
 	}
+	/*
+	 * 获取通讯线程
+	 */
+	public BluetoothCommunThread getBluetoothCommunThread(){
+		return  communThread;
+	}
 
+	public void onCreate(){
+		IntentFilter controlFilter=new IntentFilter();
+		controlFilter.addAction(BluetoothTools.ACTION_START_SERVER);
+		controlFilter.addAction(BluetoothTools.ACTION_STOP_SERVICE);
+		controlFilter.addAction(BluetoothTools.ACTION_DATA_TO_SERVICE);
+		
+		//注册BroadcastReciver
+		bluetoothAdapter.enable();	//打开蓝牙
+		//开启蓝牙发现功能30秒
+		Intent discoveryIntent=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,300);
+		discoveryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(discoveryIntent);
+		//开启后台连接线程
+		new BluetoothServerConnThread(serviceHandler).start();
+		
+		super.onCreate();
+	}
+	public void onDestroy(){
+		if(communThread!=null){
+			communThread.isRun=false;
+		}
+		unregisterReceiver(controlReceiver);
+		super.onDestroy();
+	}
 }
