@@ -38,7 +38,7 @@ public class BluetoothCommunThread extends Thread{
 				e1.printStackTrace();
 			}
 			//发送连接失败信息
-			serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR);
+			serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
 			e.printStackTrace();
 		}
 	}
@@ -63,6 +63,7 @@ public class BluetoothCommunThread extends Thread{
 				return ;
 			}
 		}
+		//关闭流
 		if(inStream!=null)
 		{
 			try{

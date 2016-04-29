@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.bluetooth.BluetoothSocket;
 
 public class BluetoothServerService extends Service {
 
@@ -38,8 +39,11 @@ public class BluetoothServerService extends Service {
 
 		
 	};
+	//接收其他线程消息的handler
 	private Handler serviceHandler =new Handler(){
-		public void handlerMessage(Message msg){
+		
+		@Override
+		public void handleMessage(Message msg){
 			switch(msg.what){
 			case BluetoothTools.MESSAGE_CONNECT_SUCCESS:
 				//连接成功，开启通讯线程
