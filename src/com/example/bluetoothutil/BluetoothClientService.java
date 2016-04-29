@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -113,6 +114,8 @@ public class BluetoothClientService extends Service {
 				Intent dataIntent=new Intent(BluetoothTools.ACTION_DATA_TO_GAME);
 				dataIntent.putExtra(BluetoothTools.DATA, (Serializable)msg.obj);
 				sendBroadcast(dataIntent);
+				break;
+			default:
 				break;
 			
 			}

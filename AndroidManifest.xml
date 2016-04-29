@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ServerActivity"></activity>
+        <activity android:name=".ClientActivity"></activity>
+        <service android:name="com.example.bluetoothutil.BluetoothServerService"></service>
+        <service android:name="com.example.bluetoothutil.BluetoothClientServic"></service>e
     </application>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
 </manifest>

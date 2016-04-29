@@ -9,13 +9,13 @@
         android:layout_height="wrap_content"
         android:text="\r\n蓝牙测试程序\r\n"/>
     <Button 
-        android:id="@+id/startService"
+        android:id="@+id/startServerBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="打开服务器"/>
     
     <Button 
-        android:id="@+id/startClient"
+        android:id="@+id/startClientBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="打开客户端"/>
