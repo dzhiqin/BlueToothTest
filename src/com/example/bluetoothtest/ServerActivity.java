@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.example.bluetoothutil.BluetoothServerService;
 import com.example.bluetoothutil.BluetoothTools;
+import com.example.bluetoothutil.LogUtil;
 import com.example.bluetoothutil.TransmitBean;
 
 import android.app.Activity;
@@ -31,10 +32,11 @@ public class ServerActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// 
+			LogUtil.v("DEBUG", "ServerActivity_BroadcastReceiver_onReceive");
 			String action=intent.getAction();
 			if(BluetoothTools.ACTION_DATA_TO_GAME.equals(action)){
 				//接收数据
+			
 				TransmitBean data=(TransmitBean)intent.getExtras().getSerializable(BluetoothTools.DATA);
 				String msg="from remote"+new Date().toLocaleString()+":\r\n"+data.getMsg()+"\r\n";
 				msgEditText.append(msg);
@@ -49,6 +51,7 @@ public class ServerActivity extends Activity {
 	
 	protected void onStart(){
 		//开启后台service
+		LogUtil.v("DEBUG", "ServerActivity_onStart");
 		Intent startIntent=new Intent(ServerActivity.this,BluetoothServerService.class);
 		startService(startIntent);
 		
@@ -60,6 +63,7 @@ public class ServerActivity extends Activity {
 	}
 	
 	protected void onCreate(Bundle savedInstanceState){
+		LogUtil.v("DEBUG", "ServerActivity_onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.server);
 		
@@ -73,6 +77,7 @@ public class ServerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				LogUtil.v("DEBUG", "ServerActivity_sendBtn_onClick");
 				if("".equals(sendMsgEditText.getText().toString().trim())){
 					Toast.makeText(ServerActivity.this,"输入不能为空",Toast.LENGTH_SHORT).show();
 				}else{
@@ -92,6 +97,7 @@ public class ServerActivity extends Activity {
 	
 	protected void onStop()
 	{
+		LogUtil.v("DEBUG", "ServerActivity_onStop");
 		Intent startService=new Intent(BluetoothTools.ACTION_STOP_SERVICE);
 		sendBroadcast(startService);
 		unregisterReceiver(broadcastReceiver);

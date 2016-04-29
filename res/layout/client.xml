@@ -32,7 +32,7 @@
         android:editable="false"
         android:cursorVisible="false"
         android:background="#AAA"
-        android:layout_margin="5dip"/>
+        android:layout_margin="5dp"/>
     
     <EditText
         android:id="@+id/clientSendEditText"

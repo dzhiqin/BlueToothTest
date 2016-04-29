@@ -24,6 +24,7 @@ public class BluetoothClientConnThread extends Thread{
 		this.serverDevice=serverDevice;
 	}
 	public void run(){
+		LogUtil.v("DEBUG", "BluetoothClientConnThread_run");
 		BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
 		try{
 			socket=serverDevice.createRfcommSocketToServiceRecord(BluetoothTools.PRIVATE_UUID);

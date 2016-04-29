@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.bluetoothutil.BluetoothClientService;
 import com.example.bluetoothutil.BluetoothTools;
+import com.example.bluetoothutil.LogUtil;
 import com.example.bluetoothutil.TransmitBean;
 
 import android.app.Activity;
@@ -36,11 +37,13 @@ public class ClientActivity extends Activity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			
+			LogUtil.v("DEBUG", "ClientActivity_BroadcastRecever_onReceive");
 			String action=intent.getAction();
 			if(BluetoothTools.ACTION_NOT_FOUND_SERVER.equals(action)){
+				LogUtil.v("DEBUG", "ClientActivity_BroadcastRecever_onReceive_notFoundServer");
 				serversText.append("not found device\r\n");
 			}else if(BluetoothTools.ACTION_FOUND_DEVICE.equals(action)){
+				LogUtil.v("DEBUG", "ClientActivity_BroadcastRecever_onReceive_foundDevice");
 				BluetoothDevice device=(BluetoothDevice)intent.getExtras().get(BluetoothTools.DEVICE);
 				deviceList.add(device);
 				serversText.append(device.getName()+"\r\n");
@@ -49,6 +52,7 @@ public class ClientActivity extends Activity {
 				sendBtn.setEnabled(true);
 			}else if(BluetoothTools.ACTION_DATA_TO_GAME.equals(action)){
 				//接收数据
+				LogUtil.v("DEBUG", "ClientActivity_BroadcastRecever_onReceive_dataToGame");
 				TransmitBean data=(TransmitBean)intent.getExtras().getSerializable(BluetoothTools.DATA);
 				String msg="from remote"+new Date().toLocaleString()+":\r\n"+data.getMsg()+"\r\n";
 				chatEditText.append(msg);
@@ -58,6 +62,7 @@ public class ClientActivity extends Activity {
 	};
 	public void onStart(){
 		//清空列表
+		LogUtil.v("DEBUG", "ClientActivity_onStart");
 		deviceList.clear();
 		//开启后台service
 		Intent startService=new Intent(ClientActivity.this,BluetoothClientService.class);
@@ -74,6 +79,7 @@ public class ClientActivity extends Activity {
 		super.onStart();
 	}
 	protected void onCreate(Bundle savedInstanceState){
+		LogUtil.v("DEBUG", "ClientActivity_onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.client);
 		
@@ -88,6 +94,7 @@ public class ClientActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// 发送消息
+				LogUtil.v("DEBUG", "ClientActivity_sendBtn_onClick");
 				if("".equals(sendEditText.getText().toString().trim())){
 					Toast.makeText(ClientActivity.this,"输入不能为空", Toast.LENGTH_SHORT).show();
 				}else{
@@ -108,6 +115,7 @@ public class ClientActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				//开始搜索
+				LogUtil.v("DEBUG", "ClientActivity_startSearchBtn_onClick");
 				Intent startSearchIntent=new Intent(BluetoothTools.ACTION_START_DISCOVERY);
 				sendBroadcast(startSearchIntent);
 			}
@@ -118,6 +126,7 @@ public class ClientActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// 选择第一个设备
+				LogUtil.v("DEBUG", "ClientActivity_selectDeviceBtn_onClick");
 				Intent selectDeviceIntent=new Intent(BluetoothTools.ACTION_SELECTED_DEVICE);
 				selectDeviceIntent.putExtra(BluetoothTools.DEVICE,deviceList.get(0));
 				sendBroadcast(selectDeviceIntent);
@@ -128,6 +137,7 @@ public class ClientActivity extends Activity {
 	}
 	protected void onStop(){
 		//关闭后台service
+		LogUtil.v("DEBUG", "ClientActivity_onStop");
 		Intent startService=new Intent(BluetoothTools.ACTION_STOP_SERVICE);
 		sendBroadcast(startService);
 		unregisterReceiver(broadcastReceiver);

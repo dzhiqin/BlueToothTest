@@ -1,5 +1,7 @@
 package com.example.bluetoothtest;
 
+import com.example.bluetoothutil.LogUtil;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ public class MainActivity extends Activity {
 	private ButtonClickListener btnClickListener=new ButtonClickListener();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		LogUtil.v("DEBUG", "MainActivity_onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
@@ -34,12 +37,14 @@ public class MainActivity extends Activity {
 			{
 			case R.id.startServerBtn:
 				//打开服务器
+				LogUtil.v("DEBUG", "MainActivity_startServerBtn_onClick");
 				Intent serverIntent=new Intent(MainActivity.this,ServerActivity.class);
 				serverIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(serverIntent);
 				break;
 			case R.id.startClientBtn:
 				//打开客户端
+				LogUtil.v("DEBUG", "MainActivity_startClientBtn_onClick");
 				Intent clientIntent=new Intent(MainActivity.this,ClientActivity.class);
 				clientIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(clientIntent);

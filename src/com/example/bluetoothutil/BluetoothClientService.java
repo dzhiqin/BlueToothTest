@@ -3,7 +3,7 @@ package com.example.bluetoothutil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -30,24 +30,29 @@ public class BluetoothClientService extends Service {
 	private BroadcastReceiver controlReceiver=new BroadcastReceiver(){
 		
 		public void onReceive(Context context,Intent intent){
+			LogUtil.v("DEBUG", "BluetoothToolsClientService_controlReceiver_onReceive");
 			String action=intent.getAction();
 			if(BluetoothTools.ACTION_START_DISCOVERY.equals(action)){
 				//开始搜索
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_controlReceiver_onReceive_startDiscovery");
 				discoveredDevices.clear();bluetoothAdapter.enable();
 				bluetoothAdapter.startDiscovery();
 			}else if(BluetoothTools.ACTION_SELECTED_DEVICE.equals(action)){
 				//选择了连接的服务器设备
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_controlReceiver_onReceive_selectedDevice");
 				BluetoothDevice device=(BluetoothDevice)intent.getExtras().get(BluetoothTools.DEVICE);
 				//开启设备连接线程
 				new BluetoothClientConnThread(handler,device).start();
 			}else if(BluetoothTools.ACTION_STOP_SERVICE.equals(action)){
 				//停止后台服务
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_controlReceiver_onReceive_stopService");
 				if(communThread!=null){
 					communThread.isRun=false;
 				}
 				stopSelf();
 			}else if(BluetoothTools.ACTION_DATA_TO_SERVICE.equals(action)){
 				//获取数据
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_controlReceiver_onReceive_data2Service");
 				Object data=intent.getSerializableExtra(BluetoothTools.DATA);
 				if(communThread!=null)
 				{
@@ -60,15 +65,19 @@ public class BluetoothClientService extends Service {
 	private BroadcastReceiver discoveryReceiver=new BroadcastReceiver(){
 	
 		
+		@SuppressLint("HandlerLeak")
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			LogUtil.v("DEBUG", "BluetoothToolsClientService_discoveryReceiver_onReceive");
 			// TODO 自动生成的方法存根
 			String action=intent.getAction();
 			if(BluetoothAdapter.ACTION_DISCOVERY_STARTED.endsWith(action)){
 				//开始搜索
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_discoveryReceiver_onReceive_discoveryStarted");
 			}else if (BluetoothDevice.ACTION_FOUND.equals(action)){
 				//发现远程蓝牙设备
 				//获取设备
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_discoveryReceiver_onReceive_actionFound");
 				BluetoothDevice bluetoothDevice=intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 				discoveredDevices.add(bluetoothDevice);
 				
@@ -78,6 +87,7 @@ public class BluetoothClientService extends Service {
 				sendBroadcast(deviceListIntent);
 			}else if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
 				//搜索结束
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_discoveryReceiver_onReceive_discoveryFinished");
 				if(discoveredDevices.isEmpty()){
 					//若未找到设备则发动未发现广播
 					Intent foundIntent=new Intent(BluetoothTools.ACTION_NOT_FOUND_SERVER);
@@ -89,6 +99,7 @@ public class BluetoothClientService extends Service {
 	
 	//接收其他线程消息的handler
 	Handler handler=new Handler(){
+		@SuppressLint("HandlerLeak")
 		public void handleMessage(Message msg){
 			//处理消息
 			switch(msg.what)
@@ -96,12 +107,14 @@ public class BluetoothClientService extends Service {
 			case BluetoothTools.MESSAGE_CONNECT_ERROR:
 				//连接错误
 				//发送连接错误广播
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_handler_connectError");
 				Intent errorIntent=new Intent(BluetoothTools.ACTION_CONNECT_ERROR);
 				sendBroadcast(errorIntent);
 				break;
 				
 			case BluetoothTools.MESSAGE_CONNECT_SUCCESS:
 				//连接成功，开启通讯线程
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_handler_connectSuccess");
 				communThread=new BluetoothCommunThread(handler,(BluetoothSocket)msg.obj);
 				communThread.start();
 				
@@ -111,6 +124,7 @@ public class BluetoothClientService extends Service {
 				break;
 			case BluetoothTools.MESSAGE_READ_OBJECT:
 				//读取对象，发送数据广播
+				LogUtil.v("DEBUG", "BluetoothToolsClientService_handler_readObject");
 				Intent dataIntent=new Intent(BluetoothTools.ACTION_DATA_TO_GAME);
 				dataIntent.putExtra(BluetoothTools.DATA, (Serializable)msg.obj);
 				sendBroadcast(dataIntent);
@@ -145,6 +159,7 @@ public class BluetoothClientService extends Service {
 	 * Service创建时的回调函数
 	 */
 	public void onCreate(){
+		LogUtil.v("DEBUG", "BluetoothToolsClientService_onCreate");
 		IntentFilter discoveryFilter=new IntentFilter();
 		discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 		discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
@@ -170,6 +185,7 @@ public class BluetoothClientService extends Service {
 		}
 		unregisterReceiver(discoveryReceiver);
 		super.onDestroy();
+		LogUtil.v("DEBUG", "BluetoothToolsClientService_onDestroy");
 	}
 
 }
