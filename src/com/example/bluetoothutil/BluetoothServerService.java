@@ -21,6 +21,7 @@ public class BluetoothServerService extends Service {
 	//控制信息广播接收器
 	private BroadcastReceiver controlReceiver=new BroadcastReceiver(){
 		public void onReceive(Context context,Intent intent){
+			LogUtil.v("DEBUG", "BluetoothServerService_bluetoothAdapter_onReceive");
 			String action =intent.getAction();
 			if(BluetoothTools.ACTION_STOP_SERVICE.equals(action)){
 				//停止后台服务
@@ -44,8 +45,10 @@ public class BluetoothServerService extends Service {
 		
 		@Override
 		public void handleMessage(Message msg){
+			LogUtil.v("DEBUG", "BluetoothServerService_serviceHandller_handleMessage");
 			switch(msg.what){
 			case BluetoothTools.MESSAGE_CONNECT_SUCCESS:
+				LogUtil.v("DEBUG", "BluetoothServerService_serviceHandller_handleMessage_connectSuccess");
 				//连接成功，开启通讯线程
 				communThread=new BluetoothCommunThread(serviceHandler,(BluetoothSocket)msg.obj);
 				communThread.start();
@@ -55,11 +58,13 @@ public class BluetoothServerService extends Service {
 				
 				break;
 			case BluetoothTools.MESSAGE_CONNECT_ERROR:
+				LogUtil.v("DEBUG", "BluetoothServerService_serviceHandller_handleMessage_connectError");
 				//连接错误，发送连接错误广播
 				Intent errIntent=new Intent(BluetoothTools.ACTION_CONNECT_ERROR);
 				sendBroadcast(errIntent);
 				break;
 			case BluetoothTools.MESSAGE_READ_OBJECT:
+				LogUtil.v("DEBUG", "BluetoothServerService_serviceHandller_handleMessage_readObject");
 				//读取到数据，发送数据广播
 				Intent dataIntent=new Intent(BluetoothTools.ACTION_DATA_TO_GAME);
 				dataIntent.putExtra(BluetoothTools.DATA,(Serializable)msg.obj);
@@ -84,6 +89,7 @@ public class BluetoothServerService extends Service {
 	}
 
 	public void onCreate(){
+		LogUtil.v("DEBUG", "BluetoothServerService_onCreate");
 		IntentFilter controlFilter=new IntentFilter();
 		controlFilter.addAction(BluetoothTools.ACTION_START_SERVER);
 		controlFilter.addAction(BluetoothTools.ACTION_STOP_SERVICE);
@@ -102,6 +108,7 @@ public class BluetoothServerService extends Service {
 		super.onCreate();
 	}
 	public void onDestroy(){
+		LogUtil.v("DEBUG", "BluetoothServerService_onDestroy");
 		if(communThread!=null){
 			communThread.isRun=false;
 		}

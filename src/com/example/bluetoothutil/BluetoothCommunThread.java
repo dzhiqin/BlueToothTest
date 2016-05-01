@@ -26,6 +26,7 @@ public class BluetoothCommunThread extends Thread{
 	 * socket
 	 */
 	public BluetoothCommunThread(Handler handler,BluetoothSocket socket){
+		LogUtil.v("DEBUG", "BluetoothCommunThread_constructor");
 		this.serviceHandler=handler;
 		this.socket=socket;
 		try{
@@ -46,6 +47,7 @@ public class BluetoothCommunThread extends Thread{
 
 
 	public void run(){
+		LogUtil.v("DEBUG", "BluetoothCommunThread_run");
 		while(true){
 			if(!isRun){
 				break;
@@ -93,6 +95,7 @@ public class BluetoothCommunThread extends Thread{
 	 * 写入一个可序列化对象
 	 */
 	public void writeObject(Object obj){
+		LogUtil.v("DEBUG", "BluetoothCommunThread_writeObject");
 		try{
 			outStream.flush();
 			outStream.writeObject(obj);

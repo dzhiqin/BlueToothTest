@@ -99,8 +99,9 @@ public class BluetoothClientService extends Service {
 	
 	//接收其他线程消息的handler
 	Handler handler=new Handler(){
-		@SuppressLint("HandlerLeak")
+		
 		public void handleMessage(Message msg){
+			LogUtil.v("DEBUG", "BluetoothClientService_handler_handleMessage");
 			//处理消息
 			switch(msg.what)
 			{
@@ -147,7 +148,7 @@ public class BluetoothClientService extends Service {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void onStart(Intent intent ,int startId){
+	public void onStart(Intent intent ,int startId){LogUtil.v("DEBUG", "BluetoothClientService_onStart");
 		super.onStart(intent, startId);
 	}
 	@Override
@@ -159,7 +160,7 @@ public class BluetoothClientService extends Service {
 	 * Service创建时的回调函数
 	 */
 	public void onCreate(){
-		LogUtil.v("DEBUG", "BluetoothToolsClientService_onCreate");
+		LogUtil.v("DEBUG", "BluetoothClientService_onCreate");
 		IntentFilter discoveryFilter=new IntentFilter();
 		discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 		discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);

@@ -16,11 +16,13 @@ public class BluetoothServerConnThread extends Thread{
 	 * ¹¹Ôìº¯Êý
 	 */
 	public BluetoothServerConnThread(Handler handler){
+		LogUtil.v("DEBUG", "BluetoothServerConnThread_constructor");
 		this.serviceHandler=handler;
 		adapter=BluetoothAdapter.getDefaultAdapter();
 	}
 
 	public void run(){
+		LogUtil.v("DEBUG", "BluetoothServerConnThread_run");
 		try{
 			serverSocket=adapter.listenUsingRfcommWithServiceRecord("Server", BluetoothTools.PRIVATE_UUID);
 			socket=serverSocket.accept();

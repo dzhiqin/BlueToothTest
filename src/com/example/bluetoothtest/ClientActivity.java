@@ -34,7 +34,7 @@ public class ClientActivity extends Activity {
 	private List<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
 	//¹ã²¥½ÓÊÕÆ÷
 	private BroadcastReceiver broadcastReceiver=new BroadcastReceiver(){
-
+		
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			LogUtil.v("DEBUG", "ClientActivity_BroadcastRecever_onReceive");
