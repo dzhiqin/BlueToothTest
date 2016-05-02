@@ -27,7 +27,7 @@
         <activity android:name="com.example.bluetoothtest.ServerActivity"></activity>
         <activity android:name="com.example.bluetoothtest.ClientActivity"></activity>
         <service android:name="com.example.bluetoothutil.BluetoothServerService"></service>
-        <service android:name="com.example.bluetoothutil.BluetoothClientService"></service>e
+        <service android:name="com.example.bluetoothutil.BluetoothClientService"></service>
     </application>
     
 

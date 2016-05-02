@@ -96,6 +96,7 @@ public class BluetoothServerService extends Service {
 		controlFilter.addAction(BluetoothTools.ACTION_DATA_TO_SERVICE);
 		
 		//注册BroadcastReciver
+		registerReceiver(controlReceiver,controlFilter);
 		bluetoothAdapter.enable();	//打开蓝牙
 		//开启蓝牙发现功能30秒
 		Intent discoveryIntent=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
