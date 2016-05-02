@@ -71,7 +71,7 @@ public class BluetoothClientService extends Service {
 			LogUtil.v("DEBUG", "BluetoothToolsClientService_discoveryReceiver_onReceive");
 			// TODO 自动生成的方法存根
 			String action=intent.getAction();
-			if(BluetoothAdapter.ACTION_DISCOVERY_STARTED.endsWith(action)){
+			if(BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)){
 				//开始搜索
 				LogUtil.v("DEBUG", "BluetoothToolsClientService_discoveryReceiver_onReceive_discoveryStarted");
 			}else if (BluetoothDevice.ACTION_FOUND.equals(action)){
